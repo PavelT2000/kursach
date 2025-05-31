@@ -27,6 +27,7 @@ type
     procedure RemoveClick(Sender: TObject);
     procedure Editing(Sender: TObject);
     procedure Visability(Sender: TObject);
+    destructor Destroy;
 
   type
     Item = TExpression;
@@ -41,6 +42,11 @@ implementation
 constructor TScrollBox.Create;
 begin
   items := TList<Item>.Create;
+end;
+
+destructor TScrollBox.Destroy;
+begin
+  items.Destroy;
 end;
 
 procedure TScrollBox.UpdateItems;
@@ -101,6 +107,11 @@ begin
         FRePaint(self);
       var
       panel := TExpression(btn.Parent);
+      panel.Edit.Free;
+      panel.yLabel.Free;
+      panel.colBox.Free;
+      panel.removeBtn.Free;
+      panel.visibleBtn.Free;
       panel.Free;
       items.Remove(panel);
       UpdateItems;

@@ -12,6 +12,7 @@ var Edit:TEdit;
 colBox:TColorBox;
 removeBtn:TButton;
 visibleBtn:TButton;
+yLabel:TLabel;
 end;
 
 implementation
@@ -19,7 +20,10 @@ implementation
 constructor TExpression.Create(Sender: TComponent);
 begin
 inherited Create(Sender);
-
+self.yLabel:=TLabel.Create(self);
+self.yLabel.Parent:=self;
+self.yLabel.AutoSize:=true;
+self.yLabel.Caption:='Y=';
 
 self.Edit:=TEdit.Create(self);
 self.Edit.Parent:=self;
@@ -45,12 +49,18 @@ begin
 
   self.Width:=self.Parent.Width;
   self.Height:=50;
-  Edit.Width:=Round(self.Width*(3/4));
+
+  yLabel.Width:=Round(self.Width*(1/12));
+  ylabel.Height:=self.Height;
+  yLabel.Font.Size:=14;
+
+  Edit.Left:=yLabel.Width;
+  Edit.Width:=Round(self.Width*(8/12));
   Edit.Height:=self.Height;
   Edit.Font.Size:=14;
 
   colBox.Width:=self.Width-self.Edit.Width;
-  colBox.left:=edit.Width;
+  colBox.left:=Round(self.Width*(3/4));
   colBox.Height:=round(self.Height/2);
   colBox.Top:=self.Height-colBox.Height;
 

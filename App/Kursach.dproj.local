@@ -20,4 +20,12 @@
     <Transaction>1899.12.30 00:00:00.000.137,=C:\Users\Pavel\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.604,C:\Users\Pavel\Documents\Embarcadero\Studio\Projects\Unit2.pas=C:\Univer\kursach\Main.pas</Transaction>
   </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="Expression.pas"/>
+    <File Path="Field.pas"/>
+    <File Path="Main.pas"/>
+    <File Path="Main.dfm"/>
+    <File Path="MyParser.pas"/>
+    <File Path="ScrollBox.pas"/>
+  </ProjectSortOrder>
 </BorlandProject>

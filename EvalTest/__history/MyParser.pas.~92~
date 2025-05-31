@@ -1,0 +1,532 @@
+unit MyParser;
+
+interface
+
+uses
+  SysUtils, System.Character, Math, System.Generics.Collections;
+
+function Evaluate(input: string; x: Double; out y: Double): Boolean;
+
+implementation
+
+type
+  token = record
+    name: string;
+    val: Double;
+    priority: integer;
+  end;
+
+function GetToken(str: string; var List: TList<token>; off: integer): Boolean;
+var
+  t: token;
+begin
+  if str = 'pi' then
+  begin
+    t.val := Pi;
+    t.priority := 0;
+    t.name := 'const';
+    List.Add(t);
+    Exit(True);
+  end;
+  if str = 'e' then
+  begin
+    t.val := Exp(1);
+    t.priority := 0;
+    t.name := 'const';
+    List.Add(t);
+    Exit(True);
+  end;
+
+  Result := True;
+  t.val := NaN;
+  t.priority := off + 5;
+  if (str = 'sin') or (str = 'cos') then
+    t.name := str
+  else if (str = 'tan') or (str = 'tg') then
+    t.name := 'tg'
+  else if (str = 'ctan') or (str = 'ctg') or (str = 'catan') then
+    t.name := 'ctg'
+  else if (str = 'abs') or (str = 'module') then
+    t.name := 'abs'
+  else if (str = 'sinh') or (str = 'sh') then
+    t.name := 'sh'
+  else if (str = 'cosh') or (str = 'ch') then
+    t.name := 'ch'
+  else if (str = 'tanh') or (str = 'tgh') or (str = 'th') then
+    t.name := 'th'
+  else if (str = 'catanh') or (str = 'catgh') or (str = 'ctgh') or (str = 'cth')
+  then
+    t.name := 'cth'
+  else if (str = 'exp') then
+    t.name := 'exp'
+  else if (str = 'pow') or (str = 'power') then
+    t.name := 'pow'
+  else if (str = 'arcsin') or (str = 'asin') or (str = 'arsins') then
+    t.name := 'asin'
+  else if (str = 'arccos') or (str = 'acos') or (str = 'arcos') then
+    t.name := 'acos'
+  else if (str = 'atan') or (str = 'arctan') or (str = 'artan') then
+    t.name := 'atan'
+  else if (str = 'log') then
+    t.name := 'log'
+  else if (str = 'ln') then
+    t.name := 'ln'
+  else if (str = 'lg') then
+    t.name := 'lg'
+  else if (str = 'sqrt') then
+    t.name := 'sqrt'
+  else
+    Exit(False);
+
+  List.Add(t);
+
+end;
+
+function Tokenize(const expr: string; x: Double;
+  out List: TList<token>): Boolean;
+var
+  i, j, priorityOffset: integer;
+  t: token;
+  pFlag, flag: Boolean;
+  separator: Boolean;
+begin
+
+  Result := True;
+  i := 0;
+  priorityOffset := 0;
+  List := TList<token>.Create;
+
+  separator := False;
+  While i <= expr.Length - 1 do
+  begin
+    Inc(i);
+    if expr[i] = ',' then
+    begin
+      separator := True;
+      if (i < High(expr)) and (expr[i + 1] = '-') then
+        Inc(i);
+      continue;
+    end;
+
+    if ('xXõÕ'.Contains(expr[i])) then
+    begin
+      if (List.Count > 0) and not isNaN(List.Last.val) then
+      begin
+        if separator then
+          separator := False
+        else
+        begin
+          t.name := '*';
+          t.val := NaN;
+          t.priority := 2 + priorityOffset;
+          List.Add(t);
+        end;
+      end;
+      t.name := 'Const';
+      t.val := x;
+      t.priority := 0;
+      List.Add(t);
+      continue;
+    end;
+    if isLetter(expr[i]) then
+    begin
+      j := i;
+      While (j <= High(expr)) and isLetter(expr[j]) do
+        Inc(j);
+      if (List.Count > 0) and not isNaN(List.Last.val) then
+      begin
+
+        t.name := '*';
+        t.val := NaN;
+        t.priority := 2 + priorityOffset;
+        List.Add(t);
+      end;
+      if GetToken(expr.Substring(i - 1, j - i), List, priorityOffset) then
+        i := j - 1
+
+      else
+        Exit(False);
+
+      continue;
+
+    end;
+    if IsNumber(expr[i]) then
+    begin
+      j := i;
+      pFlag := False;
+      While (j <= High(expr)) and (IsNumber(expr[j]) or (expr[j] = '.')) do
+      begin
+        if expr[j] = '.' then
+        begin
+          if pFlag then
+            Exit(False)
+          else
+            pFlag := True;
+        end;
+
+        Inc(j)
+      end;
+      if (List.Count > 0) and not isNaN(List.Last.val) then
+      begin
+        if separator then
+          separator := False
+        else
+        begin
+          t.name := '*';
+          t.val := NaN;
+          t.priority := 2 + priorityOffset;
+          List.Add(t);
+        end;
+      end;
+      t.val := StrToFloat(expr.Substring(i - 1, j - i).Replace('.', ','));
+      t.priority := 0;
+      t.name := 'const';
+      i := j - 1;
+      List.Add(t);
+
+      continue;
+    end;
+
+    if expr[i] = '(' then
+    begin
+      if (List.Count > 0) and not isNaN(List.Last.val) then
+      begin
+        if separator then
+          separator := False
+        else
+        begin
+          t.name := '*';
+          t.val := NaN;
+          t.priority := 2 + priorityOffset;
+          List.Add(t);
+        end;
+      end;
+
+      priorityOffset := priorityOffset + 10;
+      t.name := '(';
+      t.val := NaN;
+      t.priority := 02 + priorityOffset;
+      List.Add(t);
+      continue;
+    end;
+    if expr[i] = ')' then
+    begin
+      if priorityOffset = 0 then
+        Exit(False);
+
+      if separator then
+        Exit(False);
+      priorityOffset := priorityOffset - 10;
+      t.name := ')';
+      t.val := NaN;
+      t.priority := 02 + priorityOffset;
+      List.Add(t);
+      continue;
+    end;
+    if '+|~'.Contains(expr[i]) then
+    begin
+      t.name := expr[i];
+      t.val := NaN;
+      begin
+        t.name := expr[i];
+        t.priority := 1 + priorityOffset;
+        List.Add(t);
+        continue;
+      end;
+    end;
+    if '*/%&'.Contains(expr[i]) then
+    begin
+      t.name := expr[i];
+      t.val := NaN;
+      t.priority := 2 + priorityOffset;
+      List.Add(t);
+      continue;
+    end;
+    if expr[i] = '^' then
+    begin
+      t.name := expr[i];
+      t.val := NaN;
+      t.priority := 3 + priorityOffset;
+      List.Add(t);
+
+      continue;
+    end;
+    if expr[i] = '-' then
+    begin
+      if (i = 1) or (expr[i - 1] = '(') or (expr[i - 1] = ',') then
+      begin
+        t.name := 'const';
+        t.val := 0;
+        t.priority := 0;
+        List.Add(t);
+
+      end;
+      t.name := '-';
+      t.val := NaN;
+      t.priority := 1 + priorityOffset;
+      List.Add(t);
+      continue;
+
+    end;
+
+    Exit(False);
+  end;
+  if priorityOffset <> 0 then
+    Exit(False);
+end;
+
+function operation(oper: string; a, b: Double): Double; overload;
+begin
+  if oper = '+' then
+    Result := a + b
+  else if oper = '-' then
+    Result := a - b
+  else if oper = '*' then
+    Result := a * b
+  else if oper = '/' then
+    Result := a / b
+  else if (oper = '^') or (oper = 'pow') then
+    Result := Math.Power(a, b)
+  else if (oper = 'log') then
+    Result := Ln(b) / Ln(a)
+
+end;
+
+function operation(oper: string; a: Double): Double; overload;
+begin
+  if oper = 'sin' then
+    Result := Sin(a)
+  else if oper = 'cos' then
+    Result := cos(a)
+  else if oper = 'tg' then
+    Result := tan(a)
+  else if oper = 'ctg' then
+    Result := 1 / tan(a)
+  else if oper = 'abs' then
+    Result := abs(a)
+  else if oper = 'sh' then
+    Result := sinh(a)
+  else if oper = 'ch' then
+    Result := cosh(a)
+  else if oper = 'th' then
+    Result := tanh(a)
+  else if oper = 'th' then
+    Result := 1 / tanh(a)
+  else if oper = 'exp' then
+    Result := Exp(a)
+  else if oper = 'asin' then
+    Result := arcsin(a)
+  else if oper = 'acos' then
+    Result := arccos(a)
+  else if oper = 'atan' then
+    Result := arcTan(a)
+  else if oper = 'lg' then
+    Result := Math.Log10(a)
+  else if oper = 'ln' then
+    Result := Ln(a)
+  else if oper = 'sqrt' then
+    Result := sqrt(a);
+
+end;
+
+function SubCalc(var expr: TList<token>; index: integer): Boolean;
+var
+  t: token;
+begin
+
+  t.name := 'const';
+  t.priority := 0;
+  if ('sincostgctgabsshchthcthexpasinacosatanlnlgsqrt'.Contains
+    (expr[index].name)) then
+  begin
+    if (index < expr.Count - 1) and not isNaN(expr[index + 1].val) then
+    begin
+      t.val := operation(expr[index].name, expr[index + 1].val);
+      expr.Delete(index);
+      expr.Delete(index);
+      expr.Insert(index, t);
+    end
+    else
+      Exit(False);
+  end
+
+  else if ('powlog'.Contains(expr[index].name)) then
+  begin
+    if (index < expr.Count - 2) and not isNaN(expr[index + 1].val) and
+      not isNaN(expr[index + 2].val) then
+    begin
+      t.val := operation(expr[index].name, expr[index + 1].val,
+        expr[index + 2].val);
+      expr.Delete(index);
+      expr.Delete(index);
+      expr.Delete(index);
+      expr.Insert(index, t);
+    end
+    else
+      Exit(False);
+  end
+  else
+  begin
+    if (index > 0) and (index < expr.Count - 1) and
+      not isNaN(expr[index + 1].val) and not isNaN(expr[index - 1].val) then
+    begin
+      t.val := operation(expr[index].name, expr[index - 1].val,
+        expr[index + 1].val);
+      expr.Delete(index);
+      expr.Insert(index, t);
+      expr.Delete(index - 1);
+      expr.Delete(index);
+    end
+    else
+      Exit(False);
+  end;
+
+end;
+
+function Calculate(expr: TList<token>; x: Double; out y: Double): Boolean;
+var
+  i, j: integer;
+begin
+
+  i := 0;
+  j := 0;
+  While (i < expr.Count) and (expr.Count <> 1) do
+  begin
+    if isNaN(expr[i].val) and (i < expr.Count - 1) then
+    begin
+
+      if (i < expr.Count - 1) and not('powlog'.Contains(expr[i].name) and
+        (i = expr.Count - 3)) then
+      begin
+        j := i + 1;
+        While (j < expr.Count - 1) and not(isNaN(expr[j].val)) do
+          Inc(j);
+        if (expr[i].priority >= expr[j].priority) then
+        begin
+          if (SubCalc(expr, i)) then
+            i := 0
+          else
+            Exit(False);
+        end
+        else
+          Inc(i);
+      end
+      else
+      begin
+        if (SubCalc(expr, i)) then
+          i := 0
+        else
+          Exit(False);
+      end;
+
+    end
+    else
+      Inc(i)
+
+  end;
+  y := expr[0].val;
+  Result := True;
+
+end;
+
+function Evaluate(input: string; x: Double; out y: Double): Boolean;
+var
+  expr: TList<token>;
+  procedure Format;
+  begin
+
+    input := input.Replace(' ', '');
+    input := LowerCase(input);
+
+  end;
+
+  function Check: Boolean;
+  begin
+    Result := True;
+    var
+      i: integer;
+    i := -1;
+    while i < expr.Count - 1 do
+    begin
+      Inc(i);
+
+      if isNaN(expr[i].val) then
+      begin
+        if (expr[i].name = '(') or (expr[i].name = ')') then
+        begin
+          expr.Delete(i);
+          Dec(i);
+          continue;
+        end;
+
+        if ('sincostgctgabsshchthcthexpasinacosatanlnlgsqrtpowlog'.Contains
+          (expr[i].name)) then
+        begin
+          if (i < expr.Count - 1) and (expr[i + 1].name = '(') then
+          begin
+            var
+              j: integer;
+            j := i + 1;
+            while (j < expr.Count) and (expr[j].name = '(') do
+              Inc(j);
+            if expr[j].name = ')' then
+              Exit(False);
+
+          end
+          else
+            Exit(False);
+        end;
+        if ('powlog'.Contains(expr[i].name)) then
+        begin
+          if i < expr.Count - 4 then
+          begin
+            if isNaN(expr[i + 2].val) or isNaN(expr[i + 4].val) then
+              Exit(False);
+            if expr[i + 1].val < 0 then
+              Exit(False);
+
+          end
+          else
+            Exit(False);
+        end
+        else
+        begin
+          if (i = 0) or (i = expr.Count - 1) or
+            ('+-u*/^|~%&sincostgctgabsshchthcthexpasinacosatanlnlgsqrtpowlog'.
+            Contains(expr[i - 1].name) or
+            '+-u*/^|~%&'.Contains(expr[i + 1].name)) then
+            Exit(False);
+        end;
+
+      end;
+
+    end;
+    if (expr.Count > 0) and isNaN(expr.Last.val) then
+      Exit(False);
+
+  end;
+
+begin
+  Format;
+  if input = '' then
+    Exit(False);
+  if Tokenize(input, x, expr) then
+  begin
+    if (expr.Count > 0) then
+    begin
+      if Calculate(expr, x, y) then
+      begin
+        if isNaN(y) then
+          Result := False
+        else
+          Result := True;
+      end;
+    end
+    else
+      Result := False;
+  end
+  else
+    Result := False;
+end;
+
+end.

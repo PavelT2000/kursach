@@ -231,13 +231,13 @@ begin
         if MyParser.Evaluate(item.Edit.Text, X, Y) then
         begin
 
-          if (Y < bounds.Bottom) then
+          if (Y < bounds.Bottom) or (y=-Infinity) then
           begin
             Y := bounds.Bottom;
             flag := false;
           end;
 
-          if Y > bounds.Top then
+          if (Y > bounds.Top) or (y=+Infinity) then
           begin
             Y := bounds.Top;
             flag := false;

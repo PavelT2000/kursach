@@ -95,7 +95,6 @@ begin
   Form2.Button1.Top:=0;
   Form2.Button1.Left:=Width-Button1.Width-10;
   ScrollBox1.Width := round((1 / 3) * self.Width);
-  ScrollBox1.DoubleBuffered := false;
   ScrollBox1.UpdateItems;
 
 end;

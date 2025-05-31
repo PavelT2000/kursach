@@ -1,0 +1,73 @@
+program Test;
+
+{$APPTYPE CONSOLE}
+{$R *.res}
+
+uses
+  System.SysUtils,
+  MyParser in 'MyParser.pas';
+
+var
+  lex: array of String;
+  counter: integer;
+
+procedure Check(a: string; depth: integer);
+begin
+
+  if depth = 0 then
+  begin
+    for var i := Low(lex) to High(lex) do
+    begin
+      var
+        y: double;
+      try
+        // Writeln('Check ', a + lex[i]);
+        MyParser.Evaluate(a + lex[i], 0.5, y);
+        MyParser.Evaluate(a + lex[i], 1.5, y);
+        MyParser.Evaluate(a + lex[i], -0.5, y);
+        MyParser.Evaluate(a + lex[i], -1.5, y);
+        // Writeln('Ok ', a + lex[i]);
+      except
+        on E: Exception do
+        begin
+          Writeln('Произошла ошибка: ' + E.Message);
+          Writeln(a + lex[i]);
+          Readln;
+        end;
+      end;
+
+    end;
+    Exit;
+  end
+  else
+  begin
+    for var i := Low(lex) to High(lex) do
+    begin
+      Check(a + lex[i], depth - 1);
+    end;
+  end;
+
+end;
+
+begin
+  counter := 0;
+  var
+    y: double;
+  var
+    ex: string;
+
+  lex := ['sin', '(', ')', '2.5', '+', '-', '/', '*', 'x', ',', '^', 'log'];
+  ex := '-xsin,,2.5';
+  MyParser.Evaluate(ex, 0.5, y);
+  MyParser.Evaluate(ex, 1.5, y);
+  MyParser.Evaluate(ex, -0.5, y);
+  MyParser.Evaluate(ex, -1.5, y);
+  for var i := 0 to 10 do
+  begin
+    Check('', i);
+       Writeln('Searching ', counter);
+  end;
+
+  Readln;
+
+end.

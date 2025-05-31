@@ -1,0 +1,42 @@
+program Test;
+
+{$APPTYPE CONSOLE}
+{$R *.res}
+
+uses
+  System.SysUtils,
+  MyParser in 'MyParser.pas';
+
+var
+  lex: array of String;
+
+procedure Check(a: string; depth: integer);
+begin
+  if depth = 0 then
+  begin
+    for var i := Low(lex) to High(lex) do
+    begin
+    var y:double;
+    MyParser.Evaluate(a+lex[i],0.5,y);
+    MyParser.Evaluate(a+lex[i],1.5,y);
+    MyParser.Evaluate(a+lex[i],-0.5,y);
+    MyParser.Evaluate(a+lex[i],-1.5,y);
+    Writeln('Ok');
+    end;
+    Exit;
+  end
+  else
+  begin
+  for var i := Low(lex) to High(lex) do
+    begin
+      Check(a+lew[i],depth-1);
+    end;
+  end;
+
+
+end;
+
+begin
+  lex := ['sin', '(', ')', '2.5', '+', '-', '/', '*', 'x',',','log'];
+
+end.

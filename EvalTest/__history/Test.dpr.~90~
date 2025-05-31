@@ -1,0 +1,70 @@
+program Test;
+
+{$APPTYPE CONSOLE}
+{$R *.res}
+
+uses
+  System.SysUtils,
+  MyParser in 'MyParser.pas';
+
+var
+  lex: array of String;
+  counter: integer;
+
+procedure Check(a: string; depth: integer);
+begin
+  if depth = 3 then
+  begin
+    Inc(counter);
+    Writeln('Searching ', counter);
+  end;
+  if depth = 0 then
+  begin
+    for var i := Low(lex) to High(lex) do
+    begin
+      var
+        y: double;
+      try
+        // Writeln('Check ', a + lex[i]);
+        MyParser.Evaluate(a + lex[i], 0.5, y);
+        MyParser.Evaluate(a + lex[i], 1.5, y);
+        MyParser.Evaluate(a + lex[i], -0.5, y);
+        MyParser.Evaluate(a + lex[i], -1.5, y);
+        // Writeln('Ok ', a + lex[i]);
+      except
+
+        Writeln(a + lex[i]);
+        Readln;
+      end;
+
+    end;
+    Exit;
+  end
+  else
+  begin
+    for var i := Low(lex) to High(lex) do
+    begin
+      Check(a + lex[i], depth - 1);
+    end;
+  end;
+
+end;
+
+begin
+  counter := 0;
+  var
+    y: double;
+  var ex:string;
+
+  lex := ['sin', '(', ')', '2.5', '+', '-', '/', '*', 'x', ',', '^', 'log'];
+//  ex:='';
+//  MyParser.Evaluate(ex, 0.5, y);
+//  MyParser.Evaluate(ex, 1.5, y);
+//  MyParser.Evaluate(ex, -0.5, y);
+//  MyParser.Evaluate(ex, -1.5, y);
+  for var i := 0 to 10 do
+    Check('', i);
+
+  Readln;
+
+end.
