@@ -1,0 +1,18 @@
+unit Drawer;
+
+interface
+uses Vcl.ExtCtrls;
+procedure UpdateFrame(box:TPaintBox);
+
+implementation
+procedure UpdateFrame(box:TPaintBox);
+var newFrame:TCanvas;
+begin
+
+
+
+
+
+end;
+
+end.

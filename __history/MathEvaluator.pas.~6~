@@ -1,0 +1,242 @@
+unit MathEvaluator;
+
+interface
+
+uses
+  SysUtils, Math;
+
+function Evaluate(const Expression: string; const x: Double): Double;
+
+implementation
+
+function Evaluate(const Expression: string; const x: Double): Double;
+var
+  Pos: Integer;
+
+  function ParseExpression: Double; forward;
+  function ParseTerm: Double; forward;
+  function ParseFactor: Double; forward;
+  function ParseNumber: Double; forward;
+  function ParseIdentifier: Double; forward;
+
+  procedure SkipWhitespace;
+  begin
+    while (Pos <= Length(Expression)) and (Expression[Pos] = ' ') do
+      Inc(Pos);
+  end;
+
+  function ParseNumber: Double;
+  var
+    NumStr: string;
+    IsFloat: Boolean;
+  begin
+    NumStr := '';
+    IsFloat := False;
+    SkipWhitespace;
+
+    while (Pos <= Length(Expression)) and
+          (Expression[Pos] in ['0'..'9', '.', 'e', 'E', '+', '-']) do
+    begin
+      if Expression[Pos] in ['.', 'e', 'E'] then
+        IsFloat := True;
+      NumStr := NumStr + Expression[Pos];
+      Inc(Pos);
+    end;
+
+    if IsFloat or (Pos > Length(Expression)) or (Expression[Pos] <> '/') then
+      Result := StrToFloat(NumStr)
+    else
+    begin
+      Inc(Pos);
+      Result := StrToFloat(NumStr) / ParseNumber;
+    end;
+  end;
+
+  function ParseIdentifier: Double;
+  var
+    Ident: string;
+    FuncName: string;
+    Arg1, Arg2: Double;
+  begin
+    Ident := '';
+    SkipWhitespace;
+
+    while (Pos <= Length(Expression)) and (Expression[Pos] in ['a'..'z', 'A'..'Z', '_']) do
+    begin
+      Ident := Ident + LowerCase(Expression[Pos]);
+      Inc(Pos);
+    end;
+
+    SkipWhitespace;
+
+    if (Pos <= Length(Expression)) and (Expression[Pos] = '(') then
+    begin
+      Inc(Pos);
+      Arg1 := ParseExpression;
+      if (Pos <= Length(Expression)) and (Expression[Pos] = ',') then
+      begin
+        Inc(Pos);
+        Arg2 := ParseExpression;
+      end;
+
+      if (Pos > Length(Expression)) or (Expression[Pos] <> ')') then
+        raise Exception.Create('Missing closing parenthesis');
+      Inc(Pos);
+
+      FuncName := LowerCase(Ident);
+      if FuncName = 'sin' then
+        Result := Sin(Arg1)
+      else if FuncName = 'cos' then
+        Result := Cos(Arg1)
+      else if FuncName = 'tg' then
+        Result := Tan(Arg1)
+      else if FuncName = 'ctg' then
+        Result := Cotan(Arg1)
+      else if FuncName = 'sinh' then
+        Result := Sinh(Arg1)
+      else if FuncName = 'cosh' then
+        Result := Cosh(Arg1)
+      else if FuncName = 'tanh' then
+        Result := Tanh(Arg1)
+      else if FuncName = 'ctanh' then
+        Result := 1 / Tanh(Arg1)
+      else if FuncName = 'arcsin' then
+        Result := ArcSin(Arg1)
+      else if FuncName = 'arccos' then
+        Result := ArcCos(Arg1)
+      else if FuncName = 'arctan' then
+        Result := ArcTan(Arg1)
+      else if FuncName = 'arcctan' then
+        Result := Pi/2 - ArcTan(Arg1)
+      else if FuncName = 'abs' then
+        Result := Abs(Arg1)
+      else if FuncName = 'sqrt' then
+        Result := Sqrt(Arg1)
+      else if FuncName = 'pow' then
+        Result := Power(Arg1, Arg2)
+      else if FuncName = 'exp' then
+        Result := Exp(Arg1)
+      else if FuncName = 'ln' then
+        Result := Ln(Arg1)
+      else if FuncName = 'log' then
+      begin
+        if (Pos <= Length(Expression)) and (Expression[Pos-1] = ',') then
+          Result := LogN(Arg1, Arg2)
+        else
+          Result := Log10(Arg1);
+      end
+      else
+        raise Exception.Create('Unknown function: ' + Ident);
+    end
+    else
+    begin
+      if Ident = 'x' then
+        Result := x
+      else if Ident = 'pi' then
+        Result := Pi
+      else if Ident = 'e' then
+        Result := Exp(1)
+      else
+         Exception.Create('Unknown identifier: ' + Ident);
+    end;
+  end;
+
+  function ParseFactor: Double;
+  begin
+    SkipWhitespace;
+    if Pos > Length(Expression) then
+       Exception.Create('Unexpected end of expression');
+
+    case Expression[Pos] of
+      '0'..'9', '.':
+        Result := ParseNumber;
+      'a'..'z', 'A'..'Z', '_':
+        Result := ParseIdentifier;
+      '(':
+        begin
+          Inc(Pos);
+          Result := ParseExpression;
+          if (Pos > Length(Expression)) or (Expression[Pos] <> ')') then
+            raise Exception.Create('Missing closing parenthesis');
+          Inc(Pos);
+        end;
+      '+':
+        begin
+          Inc(Pos);
+          Result := ParseFactor;
+        end;
+      '-':
+        begin
+          Inc(Pos);
+          Result := -ParseFactor;
+        end;
+      else
+         Exception.Create('Unexpected character: ' + Expression[Pos]);
+    end;
+  end;
+
+  function ParseTerm: Double;
+  var
+    RightValue: Double;
+  begin
+    Result := ParseFactor;
+    SkipWhitespace;
+
+    while (Pos <= Length(Expression)) and (Expression[Pos] in ['*', '/']) do
+    begin
+      case Expression[Pos] of
+        '*':
+          begin
+            Inc(Pos);
+            RightValue := ParseFactor;
+            Result := Result * RightValue;
+          end;
+        '/':
+          begin
+            Inc(Pos);
+            RightValue := ParseFactor;
+            if RightValue = 0 then
+              raise Exception.Create('Division by zero');
+            Result := Result / RightValue;
+          end;
+      end;
+      SkipWhitespace;
+    end;
+  end;
+
+  function ParseExpression: Double;
+  var
+    RightValue: Double;
+  begin
+    Result := ParseTerm;
+    SkipWhitespace;
+
+    while (Pos <= Length(Expression)) and (Expression[Pos] in ['+', '-']) do
+    begin
+      case Expression[Pos] of
+        '+':
+          begin
+            Inc(Pos);
+            RightValue := ParseTerm;
+            Result := Result + RightValue;
+          end;
+        '-':
+          begin
+            Inc(Pos);
+            RightValue := ParseTerm;
+            Result := Result - RightValue;
+          end;
+      end;
+      SkipWhitespace;
+    end;
+  end;
+
+begin
+  Pos := 1;
+  Result := ParseExpression;
+  SkipWhitespace;
+  if Pos <= Length(Expression) then
+     Exception.Create('Unexpected character at end of expression: ' + Expression[Pos]);
+end;
+
+end.

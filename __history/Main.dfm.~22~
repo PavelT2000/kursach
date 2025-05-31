@@ -17,8 +17,22 @@ object Form2: TForm2
   Font.Style = []
   ScreenSnap = True
   OnCreate = FormCreate
+  OnMouseWheelDown = FormMouseWheelDown
+  OnMouseWheelUp = FormMouseWheelUp
   OnResize = FormResize
   TextHeight = 15
+  object PaintBox1: TPaintBox
+    Left = 409
+    Top = 0
+    Width = 631
+    Height = 640
+    Align = alClient
+    OnMouseDown = PaintBox1MouseDown
+    OnMouseMove = PaintBox1MouseMove
+    OnMouseUp = PaintBox1MouseUp
+    OnPaint = PaintBox1Paint
+    ExplicitLeft = 415
+  end
   object ScrollBox1: TScrollBox
     Left = 0
     Top = 0
@@ -26,6 +40,15 @@ object Form2: TForm2
     Height = 640
     Align = alLeft
     TabOrder = 0
-    ExplicitHeight = 632
+  end
+  object Button1: TButton
+    Left = 965
+    Top = 0
+    Width = 75
+    Height = 25
+    Align = alCustom
+    Caption = 'Copy'
+    TabOrder = 1
+    OnClick = Button1Click
   end
 end

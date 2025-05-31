@@ -128,6 +128,9 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Expression.pas"/>
+        <DCCReference Include="Field.pas"/>
+        <DCCReference Include="ScrollBox.pas"/>
+        <DCCReference Include="MyParser.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

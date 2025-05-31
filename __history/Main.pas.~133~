@@ -1,0 +1,146 @@
+﻿unit Main;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Types,
+  System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.ComCtrls, System.Generics.Collections, Expression, field,ScrollBox,Clipbrd;
+
+type
+
+  
+
+  TForm2 = class(TForm)
+    ScrollBox1: TScrollBox;
+    PaintBox1: field.TPaintBox;
+    Label1: TLabel;
+    Button1: TButton;
+    procedure HandlePaint(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure PaintBox1Paint(Sender: TObject);
+    procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure FormMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+var
+  pressed: Boolean;
+  oldPos: TPoint;
+
+{$R *.dfm}
+
+
+
+
+
+
+
+
+
+
+
+procedure TForm2.Button1Click(Sender: TObject);
+begin
+  ScrollBox1.AddItem;
+end;
+
+procedure TForm2.FormCreate(Sender: TObject);
+begin
+  ScrollBox1.Create;
+  ScrollBox1.RePaint := HandlePaint;
+  ScrollBox1.AddItem;
+  PaintBox1.FScrollBox:=ScrollBox1;
+  PaintBox1.scale := 1;
+  PaintBox1.offset := PointF(0, 0);
+  PaintBox1.Invalidate;
+
+end;
+
+procedure TForm2.FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  PaintBox1.scale := PaintBox1.scale / 1.01;
+  PaintBox1.Invalidate;
+end;
+
+procedure TForm2.FormMouseWheelUp(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  PaintBox1.scale := PaintBox1.scale * 1.01;
+  PaintBox1.Invalidate;
+end;
+
+procedure TForm2.FormResize(Sender: TObject);
+begin
+  ScrollBox1.Width := round((1 / 3) * self.Width);
+  ScrollBox1.DoubleBuffered := false;
+  ScrollBox1.UpdateItems;
+
+end;
+
+procedure TForm2.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  pressed := True;
+  oldPos := Point(Form2.CalcCursorPos.x, Form2.CalcCursorPos.y);
+end;
+
+procedure TForm2.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  if pressed then
+  begin
+    var
+      Delta: TPoint;
+    Delta.X := Form2.CalcCursorPos.x - oldPos.X;
+    Delta.Y := Form2.CalcCursorPos.Y - oldPos.Y;
+    PaintBox1.offset := PointF(PaintBox1.offset.X -Delta.X/PaintBox1.cell.X,
+      PaintBox1.offset.Y +Delta.Y/PaintBox1.cell.Y);
+    PaintBox1.Invalidate;
+    oldPos:=Form2.CalcCursorPos;
+  end;
+end;
+
+procedure TForm2.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  pressed := false;
+end;
+procedure TForm2.HandlePaint(Sender: TObject);
+begin
+  Form2.PaintBox1.Invalidate;
+end;
+
+procedure TForm2.PaintBox1Paint(Sender: TObject);
+begin
+  var
+    frame: TBitmap;
+  frame := PaintBox1.getNewFrame;
+
+  PaintBox1.Canvas.draw(0, 0, frame);
+//  self.Label1.Caption:=Format('Bounds(X(%f,%f),Y(%f,%f)), offset(%f,%f)',
+//  [PaintBox1.bounds.Left,PaintBox1.bounds.Right,PaintBox1.bounds.Bottom,PaintBox1.bounds.Top,PaintBox1.offset.X,PaintBox1.offset.Y]);
+end;
+
+end.

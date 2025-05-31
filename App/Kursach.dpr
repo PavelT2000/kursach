@@ -1,0 +1,18 @@
+program Kursach;
+
+uses
+  Vcl.Forms,
+  Main in 'Main.pas' {Form2},
+  Expression in 'Expression.pas',
+  Field in 'Field.pas',
+  ScrollBox in 'ScrollBox.pas',
+  MyParser in 'MyParser.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm2, Form2);
+  Application.Run;
+end.
