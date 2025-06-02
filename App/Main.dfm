@@ -6,7 +6,7 @@ object Form2: TForm2
   VertScrollBar.Smooth = True
   VertScrollBar.Tracking = True
   AutoScroll = True
-  Caption = 'Desmos'
+  Caption = 'Plotify'
   Color = clBtnFace
   DockSite = True
   DoubleBuffered = True
