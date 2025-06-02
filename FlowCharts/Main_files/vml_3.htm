@@ -1,0 +1,205 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" 
+ xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5"/>
+<link rel="stylesheet" type="text/css" href="visio.css"/>
+<title>Main</title>
+<style type="text/css">
+	 v\:* { behavior: url(#default#VML); }
+</style>
+
+<script src="vml_1.js" type="text/jscript" language="jscript"></script>
+
+<script type="text/jscript" language="jscript">
+
+	var pageID = 5;
+	var viewMgr = null;
+
+	if (parent.g_FirstPageToLoad != null && parent.g_FirstPageToLoad.length > 0)
+	{
+		if (parent.g_FileList[parent.g_CurPageIndex].PageID != pageID)
+		{
+			location.replace(parent.g_FileList[parent.g_CurPageIndex].PriImage);
+		}
+
+		parent.g_FirstPageToLoad = null;
+	}
+
+	function getPNZ()
+	{
+		var rawHTML = VMLDiv.innerHTML;
+		var strReturn = ""
+		
+		strReturn = rawHTML.slice( rawHTML.indexOf( '<v:group' ), rawHTML.indexOf( "</v:shape>" ) );
+		strReturn += "</v:shape></v:group>\n";
+				
+		return strReturn;
+	}
+	
+	function load()
+	{
+		viewMgr = new parent.CViewMgr("ConvertedImage", "arrowDiv");
+
+		viewMgr.put_Location = ViewMgrSetVMLLocation;
+
+
+		viewMgr.visBBoxLeft = -0.283924;
+		viewMgr.visBBoxRight = 3.483825;
+		viewMgr.visBBoxBottom = 6.487730;
+		viewMgr.visBBoxTop = 11.819357;
+
+		viewMgr.Zoom = VMLZoomChange;
+		viewMgr.setView= VMLSetView;
+
+		viewMgr.SupportsDetails = true;
+		viewMgr.SupportsSearch = true;
+
+		parent.viewMgr = viewMgr;
+
+		fit();
+	}
+
+	function unload()
+	{
+		viewMgr = null;
+		parent.viewMgr = null;
+	}
+
+	function fit()
+	{
+		if(parent.frmToolbar)
+		{
+			if (parent.g_WidgetsLoaded)
+			{
+				var zoom100 = parent.frmToolbar.document.all('a100');
+				if (zoom100)
+				{
+					parent.viewMgr.PostZoomProcessing = PostZoomProcessing;
+					zoom100.click();
+				}
+				else
+				{
+					parent.viewMgr.PostZoomProcessing = PostZoomProcessing;
+					viewMgr.Zoom(100);
+				}
+			}
+			else
+			{
+				window.setTimeout("fit()", 500);
+			}
+		}	
+		else
+		{
+			parent.viewMgr.PostZoomProcessing = PostZoomProcessing;
+			viewMgr.Zoom(100);
+		}
+	}
+
+	function PostZoomProcessing (newZoomLevel)
+	{
+		parent.viewMgr.PostZoomProcessing = null;
+		var pageIndex = parent.PageIndexFromID (pageID);
+		parent.viewMgr.getPNZ = getPNZ;
+		parent.CurPageUpdate (pageIndex);
+	}
+
+
+	
+	var isUpLevel = parent.isUpLevel;
+	var OnShapeClick = parent.OnShapeClick;
+	var OnShapeKey = parent.OnShapeKey;
+	var UpdateTooltip = parent.UpdateTooltip;
+	var clickMenu = parent.clickMenu;
+	var toggleMenuDiv = parent.toggleMenuDiv;
+	var toggleMenuLink = parent.toggleMenuLink;
+	var GoToPage = parent.GoToPage;
+
+	window.onload = load;
+	window.onunload = unload;
+	document.onclick = clickMenu;
+
+
+
+
+</script>
+
+</head>
+
+<body style="MARGIN:10px" onresize="VMLOnResize();" onscroll="VMLOnScroll();">
+
+<div id="arrowdiv" style="position:absolute;top:0;left:0;visibility:hidden;z-index:5">
+<img id="arrowgif" alt="Shows the location of the selected shape" src="arrow.gif"/>
+</div>
+
+<div id="menu1" onclick="clickMenu()" class="hlMenu">
+</div>
+
+
+
+
+<div id="VMLDiv" >
+
+
+<v:group  id="ConvertedImage" style="width:2.826716in;height:4.000000in;position:absolute;visibility=hidden;" coordSize="1413,2000" coordOrigin="-1000,-1000" >
+
+<v:shapetype 
+  id="VISSHAPE"
+  target="_parent"
+  coordsize="1413,2000"
+  coordorigin="-1000,-1000"
+  stroked="f"
+  strokecolor="red"
+  filled="t"
+>
+<v:fill opacity="0.0"/>
+</v:shapetype>
+
+
+<v:shape style="top:-1000.0;left:-1000.0;width:1413.4;height:2000.0;position:absolute" coordSize="1413,2000" coordOrigin="-1000,-1000" >
+<v:imagedata src="vml_3.emz"/>
+</v:shape>
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Начало Create" origTitle="Начало Create"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -815,-786 l -596,-786 l -593,-786 l -591,-786 l -588,-786 l -585,-786 l -583,-787 l -580,-787 l -578,-788 l -575,-788 l -573,-789 l -571,-790 l -568,-791 l -566,-792 l -564,-793 l -561,-794 l -559,-795 l -557,-797 l -555,-798 l -553,-800 l -551,-801 l -549,-803 l -547,-804 l -545,-806 l -543,-808 l -541,-810 l -540,-812 l -538,-814 l -536,-816 l -535,-818 l -534,-820 l -532,-822 l -531,-824 l -530,-827 l -529,-829 l -528,-831 l -527,-834 l -526,-836 l -525,-839 l -525,-841 l -524,-844 l -523,-846 l -523,-849 l -523,-851 l -523,-854 l -522,-856 l -522,-859 l -522,-861 l -523,-864 l -523,-867 l -523,-869 l -523,-872 l -524,-874 l -525,-877 l -525,-879 l -526,-882 l -527,-884 l -528,-886 l -529,-889 l -530,-891 l -531,-893 l -532,-896 l -534,-898 l -535,-900 l -536,-902 l -538,-904 l -540,-906 l -541,-908 l -543,-910 l -545,-912 l -547,-913 l -549,-915 l -551,-917 l -553,-918 l -555,-920 l -557,-921 l -559,-922 l -561,-924 l -564,-925 l -566,-926 l -568,-927 l -571,-928 l -573,-929 l -575,-929 l -578,-930 l -580,-931 l -583,-931 l -585,-932 l -588,-932 l -591,-932 l -593,-932 l -596,-932 l -815,-932 l -818,-932 l -820,-932 l -823,-932 l -826,-932 l -828,-931 l -831,-931 l -833,-930 l -836,-929 l -838,-929 l -840,-928 l -843,-927 l -845,-926 l -847,-925 l -850,-924 l -852,-922 l -854,-921 l -856,-920 l -858,-918 l -860,-917 l -862,-915 l -864,-913 l -866,-912 l -868,-910 l -870,-908 l -871,-906 l -873,-904 l -875,-902 l -876,-900 l -877,-898 l -879,-896 l -880,-893 l -881,-891 l -882,-889 l -883,-886 l -884,-884 l -885,-882 l -886,-879 l -886,-877 l -887,-874 l -887,-872 l -888,-869 l -888,-867 l -888,-864 l -889,-861 l -889,-859 l -889,-856 l -888,-854 l -888,-851 l -888,-849 l -887,-846 l -887,-844 l -886,-841 l -886,-839 l -885,-836 l -884,-834 l -883,-831 l -882,-829 l -881,-827 l -880,-824 l -879,-822 l -877,-820 l -876,-818 l -875,-816 l -873,-814 l -871,-812 l -870,-810 l -868,-808 l -866,-806 l -864,-804 l -862,-803 l -860,-801 l -858,-800 l -856,-798 l -854,-797 l -852,-795 l -850,-794 l -847,-793 l -845,-792 l -843,-791 l -840,-790 l -838,-789 l -836,-788 l -833,-788 l -831,-787 l -828,-787 l -826,-786 l -823,-786 l -820,-786 l -818,-786 l -815,-786xe" onmouseover="UpdateTooltip(this,5,1)" onclick="OnShapeClick(5,1)" onfocus="UpdateTooltip(this,5,1);" onkeyup="OnShapeKey(5,1)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Конец Create" origTitle="Конец Create"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -815,940 l -596,940 l -593,940 l -591,939 l -588,939 l -585,939 l -583,939 l -580,938 l -578,937 l -575,937 l -573,936 l -571,935 l -568,934 l -566,933 l -564,932 l -561,931 l -559,930 l -557,929 l -555,927 l -553,926 l -551,924 l -549,923 l -547,921 l -545,919 l -543,917 l -541,915 l -540,913 l -538,911 l -536,909 l -535,907 l -534,905 l -532,903 l -531,901 l -530,898 l -529,896 l -528,894 l -527,891 l -526,889 l -525,886 l -525,884 l -524,882 l -523,879 l -523,876 l -523,874 l -523,871 l -522,869 l -522,866 l -522,864 l -523,861 l -523,859 l -523,856 l -523,854 l -524,851 l -525,849 l -525,846 l -526,844 l -527,841 l -528,839 l -529,836 l -530,834 l -531,832 l -532,830 l -534,827 l -535,825 l -536,823 l -538,821 l -540,819 l -541,817 l -543,815 l -545,813 l -547,812 l -549,810 l -551,808 l -553,807 l -555,805 l -557,804 l -559,803 l -561,801 l -564,800 l -566,799 l -568,798 l -571,797 l -573,796 l -575,796 l -578,795 l -580,794 l -583,794 l -585,794 l -588,793 l -591,793 l -593,793 l -596,793 l -815,793 l -818,793 l -820,793 l -823,793 l -826,794 l -828,794 l -831,794 l -833,795 l -836,796 l -838,796 l -840,797 l -843,798 l -845,799 l -847,800 l -850,801 l -852,803 l -854,804 l -856,805 l -858,807 l -860,808 l -862,810 l -864,812 l -866,813 l -868,815 l -870,817 l -871,819 l -873,821 l -875,823 l -876,825 l -877,827 l -879,830 l -880,832 l -881,834 l -882,836 l -883,839 l -884,841 l -885,844 l -886,846 l -886,849 l -887,851 l -887,854 l -888,856 l -888,859 l -888,861 l -889,864 l -889,866 l -889,869 l -888,871 l -888,874 l -888,876 l -887,879 l -887,882 l -886,884 l -886,886 l -885,889 l -884,891 l -883,894 l -882,896 l -881,898 l -880,901 l -879,903 l -877,905 l -876,907 l -875,909 l -873,911 l -871,913 l -870,915 l -868,917 l -866,919 l -864,921 l -862,923 l -860,924 l -858,926 l -856,927 l -854,929 l -852,930 l -850,931 l -847,932 l -845,933 l -843,934 l -840,935 l -838,936 l -836,937 l -833,937 l -831,938 l -828,939 l -826,939 l -823,939 l -820,939 l -818,940 l -815,940xe" onmouseover="UpdateTooltip(this,5,2)" onclick="OnShapeClick(5,2)" onfocus="UpdateTooltip(this,5,2);" onkeyup="OnShapeKey(5,2)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Вызов унаследованого Create(Sender)" origTitle="Вызов унаследованого Create(Sender)"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -889,-529 l -522,-529 l -522,-749 l -889,-749 l -889,-529xe" onmouseover="UpdateTooltip(this,5,3)" onclick="OnShapeClick(5,3)" onfocus="UpdateTooltip(this,5,3);" onkeyup="OnShapeKey(5,3)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Создаём yLabel, и настраиваем параметры" origTitle="Создаём yLabel, и настраиваем параметры"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -889,-272 l -522,-272 l -522,-492 l -889,-492 l -889,-272xe" onmouseover="UpdateTooltip(this,5,4)" onclick="OnShapeClick(5,4)" onfocus="UpdateTooltip(this,5,4);" onkeyup="OnShapeKey(5,4)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Создаём Edit, и настраиваем параметры" origTitle="Создаём Edit, и настраиваем параметры"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -889,-15 l -522,-15 l -522,-235 l -889,-235 l -889,-15xe" onmouseover="UpdateTooltip(this,5,5)" onclick="OnShapeClick(5,5)" onfocus="UpdateTooltip(this,5,5);" onkeyup="OnShapeKey(5,5)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Создаём colBox, и настраиваем параметры" origTitle="Создаём colBox, и настраиваем параметры"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -889,242 l -522,242 l -522,22 l -889,22 l -889,242xe" onmouseover="UpdateTooltip(this,5,6)" onclick="OnShapeClick(5,6)" onfocus="UpdateTooltip(this,5,6);" onkeyup="OnShapeKey(5,6)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Создаём removeBtn, и настраиваем параметры" origTitle="Создаём removeBtn, и настраиваем параметры"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -889,499 l -522,499 l -522,279 l -889,279 l -889,499xe" onmouseover="UpdateTooltip(this,5,7)" onclick="OnShapeClick(5,7)" onfocus="UpdateTooltip(this,5,7);" onkeyup="OnShapeKey(5,7)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Создаём visibleBtn, и настраиваем параметры" origTitle="Создаём visibleBtn, и настраиваем параметры"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -889,756 l -522,756 l -522,536 l -889,536 l -889,756xe" onmouseover="UpdateTooltip(this,5,8)" onclick="OnShapeClick(5,8)" onfocus="UpdateTooltip(this,5,8);" onkeyup="OnShapeKey(5,8)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Начало ReSize" origTitle="Начало ReSize"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -376,-786 l -156,-786 l -154,-786 l -151,-786 l -149,-786 l -146,-786 l -143,-787 l -141,-787 l -138,-788 l -136,-788 l -134,-789 l -131,-790 l -129,-791 l -126,-792 l -124,-793 l -122,-794 l -120,-795 l -117,-797 l -115,-798 l -113,-800 l -111,-801 l -109,-803 l -107,-804 l -105,-806 l -104,-808 l -102,-810 l -100,-812 l -98,-814 l -97,-816 l -95,-818 l -94,-820 l -93,-822 l -92,-824 l -90,-827 l -89,-829 l -88,-831 l -87,-834 l -87,-836 l -86,-839 l -85,-841 l -85,-844 l -84,-846 l -84,-849 l -83,-851 l -83,-854 l -83,-856 l -83,-859 l -83,-861 l -83,-864 l -83,-867 l -84,-869 l -84,-872 l -85,-874 l -85,-877 l -86,-879 l -87,-882 l -87,-884 l -88,-886 l -89,-889 l -90,-891 l -92,-893 l -93,-896 l -94,-898 l -95,-900 l -97,-902 l -98,-904 l -100,-906 l -102,-908 l -104,-910 l -105,-912 l -107,-913 l -109,-915 l -111,-917 l -113,-918 l -115,-920 l -117,-921 l -120,-922 l -122,-924 l -124,-925 l -126,-926 l -129,-927 l -131,-928 l -134,-929 l -136,-929 l -138,-930 l -141,-931 l -143,-931 l -146,-932 l -149,-932 l -151,-932 l -154,-932 l -156,-932 l -376,-932 l -378,-932 l -381,-932 l -384,-932 l -386,-932 l -389,-931 l -391,-931 l -394,-930 l -396,-929 l -399,-929 l -401,-928 l -403,-927 l -406,-926 l -408,-925 l -410,-924 l -413,-922 l -415,-921 l -417,-920 l -419,-918 l -421,-917 l -423,-915 l -425,-913 l -427,-912 l -429,-910 l -430,-908 l -432,-906 l -434,-904 l -435,-902 l -437,-900 l -438,-898 l -439,-896 l -441,-893 l -442,-891 l -443,-889 l -444,-886 l -445,-884 l -446,-882 l -446,-879 l -447,-877 l -448,-874 l -448,-872 l -448,-869 l -449,-867 l -449,-864 l -449,-861 l -449,-859 l -449,-856 l -449,-854 l -449,-851 l -448,-849 l -448,-846 l -448,-844 l -447,-841 l -446,-839 l -446,-836 l -445,-834 l -444,-831 l -443,-829 l -442,-827 l -441,-824 l -439,-822 l -438,-820 l -437,-818 l -435,-816 l -434,-814 l -432,-812 l -430,-810 l -429,-808 l -427,-806 l -425,-804 l -423,-803 l -421,-801 l -419,-800 l -417,-798 l -415,-797 l -413,-795 l -410,-794 l -408,-793 l -406,-792 l -403,-791 l -401,-790 l -399,-789 l -396,-788 l -394,-788 l -391,-787 l -389,-787 l -386,-786 l -384,-786 l -381,-786 l -378,-786 l -376,-786xe" onmouseover="UpdateTooltip(this,5,16)" onclick="OnShapeClick(5,16)" onfocus="UpdateTooltip(this,5,16);" onkeyup="OnShapeKey(5,16)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Конец ReSize" origTitle="Конец ReSize"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -376,940 l -156,940 l -154,940 l -151,939 l -149,939 l -146,939 l -143,939 l -141,938 l -138,937 l -136,937 l -134,936 l -131,935 l -129,934 l -126,933 l -124,932 l -122,931 l -120,930 l -117,929 l -115,927 l -113,926 l -111,924 l -109,923 l -107,921 l -105,919 l -104,917 l -102,915 l -100,913 l -98,911 l -97,909 l -95,907 l -94,905 l -93,903 l -92,901 l -90,898 l -89,896 l -88,894 l -87,891 l -87,889 l -86,886 l -85,884 l -85,882 l -84,879 l -84,876 l -83,874 l -83,871 l -83,869 l -83,866 l -83,864 l -83,861 l -83,859 l -84,856 l -84,854 l -85,851 l -85,849 l -86,846 l -87,844 l -87,841 l -88,839 l -89,836 l -90,834 l -92,832 l -93,830 l -94,827 l -95,825 l -97,823 l -98,821 l -100,819 l -102,817 l -104,815 l -105,813 l -107,812 l -109,810 l -111,808 l -113,807 l -115,805 l -117,804 l -120,803 l -122,801 l -124,800 l -126,799 l -129,798 l -131,797 l -134,796 l -136,796 l -138,795 l -141,794 l -143,794 l -146,794 l -149,793 l -151,793 l -154,793 l -156,793 l -376,793 l -378,793 l -381,793 l -384,793 l -386,794 l -389,794 l -391,794 l -394,795 l -396,796 l -399,796 l -401,797 l -403,798 l -406,799 l -408,800 l -410,801 l -413,803 l -415,804 l -417,805 l -419,807 l -421,808 l -423,810 l -425,812 l -427,813 l -429,815 l -430,817 l -432,819 l -434,821 l -435,823 l -437,825 l -438,827 l -439,830 l -441,832 l -442,834 l -443,836 l -444,839 l -445,841 l -446,844 l -446,846 l -447,849 l -448,851 l -448,854 l -448,856 l -449,859 l -449,861 l -449,864 l -449,866 l -449,869 l -449,871 l -449,874 l -448,876 l -448,879 l -448,882 l -447,884 l -446,886 l -446,889 l -445,891 l -444,894 l -443,896 l -442,898 l -441,901 l -439,903 l -438,905 l -437,907 l -435,909 l -434,911 l -432,913 l -430,915 l -429,917 l -427,919 l -425,921 l -423,923 l -421,924 l -419,926 l -417,927 l -415,929 l -413,930 l -410,931 l -408,932 l -406,933 l -403,934 l -401,935 l -399,936 l -396,937 l -394,937 l -391,938 l -389,939 l -386,939 l -384,939 l -381,939 l -378,940 l -376,940xe" onmouseover="UpdateTooltip(this,5,17)" onclick="OnShapeClick(5,17)" onfocus="UpdateTooltip(this,5,17);" onkeyup="OnShapeKey(5,17)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Задать размер объекта" origTitle="Задать размер объекта"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -449,-529 l -83,-529 l -83,-749 l -449,-749 l -449,-529xe" onmouseover="UpdateTooltip(this,5,18)" onclick="OnShapeClick(5,18)" onfocus="UpdateTooltip(this,5,18);" onkeyup="OnShapeKey(5,18)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Задать размер и позицию yLabel" origTitle="Задать размер и позицию yLabel"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -449,-272 l -83,-272 l -83,-492 l -449,-492 l -449,-272xe" onmouseover="UpdateTooltip(this,5,19)" onclick="OnShapeClick(5,19)" onfocus="UpdateTooltip(this,5,19);" onkeyup="OnShapeKey(5,19)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Задать размер и позицию Edit" origTitle="Задать размер и позицию Edit"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -449,-15 l -83,-15 l -83,-235 l -449,-235 l -449,-15xe" onmouseover="UpdateTooltip(this,5,20)" onclick="OnShapeClick(5,20)" onfocus="UpdateTooltip(this,5,20);" onkeyup="OnShapeKey(5,20)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Задать размер и позицию colBox" origTitle="Задать размер и позицию colBox"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -449,242 l -83,242 l -83,22 l -449,22 l -449,242xe" onmouseover="UpdateTooltip(this,5,21)" onclick="OnShapeClick(5,21)" onfocus="UpdateTooltip(this,5,21);" onkeyup="OnShapeKey(5,21)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Задать размер и позицию removeBtn" origTitle="Задать размер и позицию removeBtn"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -449,499 l -83,499 l -83,279 l -449,279 l -449,499xe" onmouseover="UpdateTooltip(this,5,22)" onclick="OnShapeClick(5,22)" onfocus="UpdateTooltip(this,5,22);" onkeyup="OnShapeKey(5,22)"/> 
+
+<v:shape type="#VISSHAPE"   tabindex="1" title="Задать размер и позицию visibleBtn" origTitle="Задать размер и позицию visibleBtn"  style="top:-1000;left:-1000;width:1413;height:2000;position:absolute" path=" m -449,756 l -83,756 l -83,536 l -449,536 l -449,756xe" onmouseover="UpdateTooltip(this,5,23)" onclick="OnShapeClick(5,23)" onfocus="UpdateTooltip(this,5,23);" onkeyup="OnShapeKey(5,23)"/> 
+
+</v:group>
+
+
+
+</div>
+
+
+
+</body>
+</html>
+
